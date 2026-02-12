@@ -1,0 +1,27 @@
+{
+  "name": "automatizacion-cypress",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^17.2.4",
+    "moment": "^2.30.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^22.14.0",
+    "cross-env": "^7.0.3",
+    "cypress": "^13.6.4",
+    "cypress-fail-fast": "^7.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

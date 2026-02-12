@@ -1,0 +1,71 @@
+import { Puesto } from '../../../support/services/gql/gql-types';
+
+export namespace Inbound {
+  export interface DataSet {
+    description: string;
+    localizacion: number;
+    node: string;
+    puesto: Puesto;
+    warehouse: string;
+    elemento: string;
+  }
+
+  export interface ASN {
+    container: string;
+    asnId: string;
+    entrada: number;
+  }
+}
+
+describe('Inbound', function () {
+  let dataSet: Inbound.DataSet;
+  let asn: Inbound.ASN;
+
+  before(function () {
+    return cy
+      .then(() => {
+        if (Cypress.env('testData')) {
+          dataSet = Cypress.env('testData');
+        } else {
+          return cy.readFile(__dirname.concat('/data/inbound-data.json')).then((data: Inbound.DataSet[]) => {
+            dataSet = data[0];
+          });
+        }
+      })
+      .then(() => {
+        return cy.puestoConnect(dataSet).then((puestoConnected: Puesto) => {
+          dataSet.puesto = puestoConnected;
+          return cy.dbStartTest({ ...dataSet, ...dataSet.puesto, clear: true, force: true });
+        });
+      });
+  });
+
+  after(function () {
+    return cy.dbFinishTest({ report: true }).disconnectAllRadios();
+  });
+
+  afterEach(function () {
+    return cy.dbStartTest(dataSet.puesto).dbLogIt(this);
+  });
+
+  /** create, open and launch ASN */
+  it('Apertura', function () {
+    cy.createAsn(dataSet.puesto).then((createAsnData: Inbound.ASN) => {
+      cy.openAsn({ ...dataSet, ...createAsnData }).then(() => {
+        cy.launchAsn({ ...dataSet, ...createAsnData }).then(() => {
+          asn = createAsnData;
+        });
+      });
+    });
+  });
+
+  /** unload ASN */
+  it('Descarga', function () {
+    cy.unloadAsn(asn);
+  });
+
+  /** locate stock */
+  it('Ubicado', function () {
+    return cy.guidedLocationPrendaAPrenda({ ...dataSet, ...asn });
+  });
+});
