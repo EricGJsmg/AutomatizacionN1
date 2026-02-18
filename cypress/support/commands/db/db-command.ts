@@ -269,3 +269,37 @@ Cypress.Commands.add('dbReportTest', () => {
     });
   });
 });
+
+Cypress.Commands.add('dbExportReportToJson', ({ testName = 'inbound' } = {}) => {
+  return cy.log(`dbExportReportToJson`).then(() => {
+    return cy.dbGetReport().then((report: Report) => {
+      // Filtrar solo arrays con datos (eliminar vacíos)
+      const filteredReport: any = {};
+      Object.keys(report).forEach((key) => {
+        const value = (report as any)[key];
+        if (Array.isArray(value) && value.length > 0) {
+          filteredReport[key] = value;
+        }
+      });
+
+      const now = new Date();
+      const timestamp = now.toISOString().split('T')[0] + '_' + 
+                       String(now.getHours()).padStart(2, '0') + '-' +
+                       String(now.getMinutes()).padStart(2, '0') + '-' +
+                       String(now.getSeconds()).padStart(2, '0');
+      
+      const fileName = `cypress/fixtures/reports/${testName}-${timestamp}.json`;
+      return cy.writeFile(fileName, JSON.stringify(filteredReport, null, 2)).then(() => {
+        cy.bLog({
+          msg: {
+            message: `Report exportado a JSON (solo datos no vacíos)`,
+            file: fileName,
+            testName,
+            timestamp,
+            sections: Object.keys(filteredReport),
+          },
+        });
+      });
+    });
+  });
+});

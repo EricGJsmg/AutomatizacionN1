@@ -201,7 +201,29 @@ Cypress.Commands.add('guidedLocationPrendaAPrenda', ({ localizacion, warehouse, 
         const rFGuidedLocationPage: RFGuidedLocationPage = new RFGuidedLocationPage();
         rFGuidedLocationPage.insertContainer(containerSelected);
         rFGuidedLocationPage.insertArticle(articleSelected);
-        rFGuidedLocationPage.confirmDestination();
+        
+        rFGuidedLocationPage.confirmDestination().then((destinationLocation: string) => {
+          cy.bLog({
+            msg: {
+              message: 'Ubicación confirmada',
+              container: containerSelected,
+              article: articleSelected,
+              location: destinationLocation,
+            },
+          });
+
+          // Guardar material con ubicación en BD
+          return cy.dbInsert({
+            table: 'materials',
+            data: {
+              container: containerSelected,
+              articulo: articleSelected,
+              location: destinationLocation,
+              almacen: warehouse,
+              quantity: articleStock.toString(),
+            },
+          });
+        });
 
         query = `
                 where: { bul_numero: ${bultoNumber} }

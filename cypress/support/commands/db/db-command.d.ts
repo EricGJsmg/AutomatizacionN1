@@ -34,6 +34,8 @@ declare global {
       dbGetReport(): Cypress.Chainable<any>;
       /** DB: report test tables */
       dbReportTest(): Cypress.Chainable<any>;
+      /** DB: export report to JSON file in cypress/fixtures/reports/ */
+      dbExportReportToJson(options?: { testName?: string }): Cypress.Chainable<any>;
       /** DB: delete garbage if it exists (of incomplete testing) */
       dbClearDataOnError(): Cypress.Chainable<any>;
     }

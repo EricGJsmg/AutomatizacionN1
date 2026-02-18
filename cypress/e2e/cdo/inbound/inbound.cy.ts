@@ -47,7 +47,9 @@ describe('Inbound', function () {
   });
 
   after(function () {
-    return cy.dbFinishTest({ report: true }).disconnectAllRadios();
+    return cy.dbExportReportToJson({ testName: 'inbound' })
+      .then(() => cy.dbFinishTest({ report: true }))
+      .then(() => cy.disconnectAllRadios());
   });
 
   afterEach(function () {

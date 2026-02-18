@@ -21,14 +21,15 @@ class RFGuidedLocationPage {
     return cy.get('input[value="OK"]').click();
   }
 
-  confirmDestination(): Cypress.Chainable<any> {
+  confirmDestination(): Cypress.Chainable<string> {
     return cy.getText('#CONFIRMACION_UBI_MOSTRAR_DISPLAY').then((destination) => {
       return cy
         .get('#CONFIRMACION_UBI_CAPTURAR')
         .type(destination, { delay: 10 })
         .then(() => {
           return cy.get('#RFUBICA_CONFIRMAR').click();
-        });
+        })
+        .then(() => cy.wrap(destination));
     });
   }
 
