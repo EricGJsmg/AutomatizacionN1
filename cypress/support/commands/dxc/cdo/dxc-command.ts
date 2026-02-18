@@ -1,4 +1,3 @@
-import DXCLoginPage from '../../../../pages/cdo/dxc-login-page';
 import GqlService from '../../../services/gql/gql-service';
 import { Order, OrderMovement, Palet, Posicion, Puesto, Radio } from '../../../services/gql/gql-types';
 
@@ -104,15 +103,6 @@ Cypress.Commands.add('getExpeditionStatus', ({ id, localizacion } = {}) => {
 
   return cy.log('getExpeditionStatus').then(() => {
     return retryExpeditionStatus();
-  });
-});
-
-Cypress.Commands.add('loginDXC', ({ username, password, site, node } = {}) => {
-  const dLogin = new DXCLoginPage();
-  return cy.then(() => {
-    return dLogin.login(username, password).then(() => {
-      return dLogin.setWorkspace(site, node);
-    });
   });
 });
 

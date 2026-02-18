@@ -38,8 +38,6 @@ declare global {
       launchWave(options: { wave: string; type: 'SINGLE' | 'MULTI' | 'BATCH'; localizacion?: number }): Cypress.Chainable<any>;
       /** DXC: assign orders to wave (create, or specify the wave) */
       assignOrdersToWave(options: { orders: string[]; note?: string; wave?: string; localizacion?: number }): Cypress.Chainable<any>;
-      /** DXC: command to log in to DXC */
-      loginDXC(options?: { username: string; password: string; site: string; node: string }): Cypress.Chainable<any>;
       /** DXC: validate stopped processes and log in DB */
       validateProcesses(options: { localizacion?: number }): Cypress.Chainable<any>;
       /** DXC: get available associated positions */
