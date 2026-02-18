@@ -152,3 +152,34 @@ Cypress.Commands.add('unloadAsn', ({ localizacion, entrada, container } = {}) =>
       });
     });
 });
+
+Cypress.Commands.add('createContainerWithStock', ({ localizacion, dispositivo, warehouse, position } = {}) => {
+  return cy.getWarehouses({ localizacion, warehouse }).then((warehouses: any[]) => {
+    expect(warehouses, 'El almacen deberia existir').to.not.be.undefined.and.to.not.be.empty;
+    return cy.newContainer({ dispositivo, localizacion }).then((container: string) => {
+      return GqlService.createContainerWithMaterial({
+        localizacion,
+        dispositivo,
+        container,
+        article: 'GENERIC RETURN ITEM',
+        quantity: 1,
+        warehouse: warehouses![0].almi_numero,
+        position,
+      }).then((success: boolean) => {
+        cy.bLog({
+          msg: {
+            message: `${success ? 'Contenedor creado con éxito' : 'Error al intentar crear el contenedor con stock.'}`,
+            container,
+            article: 'GENERIC RETURN ITEM',
+            quantity: 1,
+            warehouse: warehouses![0].almi_numero,
+            position,
+          },
+        });
+
+        expect(success, 'El contenedor debería crearse exitosamente').to.be.true;
+        return cy.wrap(container);
+      });
+    });
+  });
+});

@@ -8,6 +8,8 @@
 /// <reference path="./dxc/cdo/dxc-command.d.ts" />
 /// <reference path="./dxc/llica/dxc-command.d.ts" />
 
+/// <reference path="../../e2e/cdo/inbound/inbound-command.d.ts" />
+
 /** GENERAL COMMANDS */
 import './globals/globals-command';
 import './db/db-command';

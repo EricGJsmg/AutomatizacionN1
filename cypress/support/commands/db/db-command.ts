@@ -58,11 +58,9 @@ Cypress.Commands.add('dbStartTest', ({ clear = false, description = '-', site, f
 });
 
 Cypress.Commands.add('dbFinishTest', ({ report = false } = {}) => {
-  return cy.then(() => {
-    if (report) cy.dbReportTest();
-    new UUIDService().deleteUUID();
-    return cy.dbClearDataOnError();
-  });
+  if (report) cy.dbReportTest();
+  const uuidService = new UUIDService();
+  return uuidService.deleteUUID().then(() => cy.dbClearDataOnError());
 });
 
 Cypress.Commands.add('dbLogIt', (context: Mocha.Context) => {

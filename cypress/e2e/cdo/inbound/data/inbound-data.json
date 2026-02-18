@@ -3,14 +3,16 @@
     "description": "Test Inbound",
     "localizacion": 4,
     "node": "PC_SILO",
-    "warehouse": "IB2B",
-    "elemento": "BAY001"
+    "warehouse": 4056,
+    "elemento": "FOLNOU",
+    "position": "FOLNOU"
   },
   {
     "description": "Test Inbound",
     "localizacion": 5,
     "node": "PC_SILO",
-    "warehouse": "IB2B",
-    "elemento": "BAY001"
+    "warehouse": 4056,
+    "elemento": "FOLNOU",
+    "position": "FOLNOU"
   }
 ]

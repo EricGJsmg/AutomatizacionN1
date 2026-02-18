@@ -8,6 +8,7 @@ export namespace Inbound {
     puesto: Puesto;
     warehouse: string;
     elemento: string;
+    position: string;
   }
 
   export interface ASN {
@@ -19,7 +20,7 @@ export namespace Inbound {
 
 describe('Inbound', function () {
   let dataSet: Inbound.DataSet;
-  let asn: Inbound.ASN;
+  let container: string;
 
   before(function () {
     return cy
@@ -37,6 +38,11 @@ describe('Inbound', function () {
           dataSet.puesto = puestoConnected;
           return cy.dbStartTest({ ...dataSet, ...dataSet.puesto, clear: true, force: true });
         });
+      })
+      .then(() => {
+        return cy.createContainerWithStock(dataSet).then((createdContainer: string) => {
+          container = createdContainer;
+        });
       });
   });
 
@@ -48,24 +54,8 @@ describe('Inbound', function () {
     return cy.dbStartTest(dataSet.puesto).dbLogIt(this);
   });
 
-  /** create, open and launch ASN */
-  it('Apertura', function () {
-    cy.createAsn(dataSet.puesto).then((createAsnData: Inbound.ASN) => {
-      cy.openAsn({ ...dataSet, ...createAsnData }).then(() => {
-        cy.launchAsn({ ...dataSet, ...createAsnData }).then(() => {
-          asn = createAsnData;
-        });
-      });
-    });
-  });
-
-  /** unload ASN */
-  it('Descarga', function () {
-    cy.unloadAsn(asn);
-  });
-
   /** locate stock */
   it('Ubicado', function () {
-    return cy.guidedLocationPrendaAPrenda({ ...dataSet, ...asn });
+    return cy.guidedLocationPrendaAPrenda({ ...dataSet, container });
   });
 });
